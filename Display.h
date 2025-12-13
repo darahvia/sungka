@@ -10,9 +10,10 @@ class Display {
 private:
   TFT_eSPI* tft;
   
+  // Updated helpers to accept Game pointer
   void drawButton(int x, int y, int w, int h, String text, bool selected);
-  void drawPit(int x, int y, int radius, int seeds, bool active, bool selected);
-  void drawStore(int x, int y, int radius, int seeds, bool active, String label);
+  void drawPit(int x, int y, int radius, int seeds, bool selected, int pitIndex, Game* game);
+  void drawStore(int x, int y, int radius, int seeds, String label, int storeIndex, Game* game);
 
 public:
   Display(TFT_eSPI* display);

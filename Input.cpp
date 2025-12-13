@@ -84,11 +84,11 @@ void Input::handleP2Button(int btn, Game* game) {
   if (game->p2State == SELECTING) {
     if (btn == BTN_P2_LEFT) {
       game->p2Selected--;
-      if (game->p2Selected < 9) game->p2Selected = 15;
+      if (game->p2Selected < 8) game->p2Selected = 14;
     }
     else if (btn == BTN_P2_RIGHT) {
       game->p2Selected++;
-      if (game->p2Selected > 15) game->p2Selected = 9;
+      if (game->p2Selected > 14) game->p2Selected = 8;
     }
     else if (btn == BTN_P2_SELECT && game->p2Selected != -1) {
       if (game->firstMove) {

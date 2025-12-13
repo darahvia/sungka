@@ -19,8 +19,8 @@ int AI::getMove(Game* game, Difficulty difficulty) {
 }
 
 bool AI::isValidMove(Game* game, int pit) {
-  // AI is P2, so valid pits are 9-15
-  if (pit < 9 || pit > 15) return false;
+  // AI is P2, so valid pits are 8-14
+  if (pit < 8 || pit > 14) return false;
   if (game->pits[pit] == 0) return false;
   return true;
 }
@@ -30,7 +30,7 @@ int AI::getRandomMove(Game* game) {
   int validMoves[7];
   int count = 0;
   
-  for (int i = 9; i <= 15; i++) {
+  for (int i = 8; i <= 14; i++) {
     if (isValidMove(game, i)) {
       validMoves[count++] = i;
     }
@@ -47,7 +47,7 @@ int AI::getMediumMove(Game* game) {
   int bestScore = -1000;
   
   // Prefer moves that land in store (extra turn)
-  for (int i = 9; i <= 15; i++) {
+  for (int i = 8; i <= 14; i++) {
     if (!isValidMove(game, i)) continue;
     
     int score = 0;
@@ -57,10 +57,14 @@ int AI::getMediumMove(Game* game) {
     // Simulate where seeds will land
     for (int j = 0; j < seeds; j++) {
       landingPos = game->getNextPos(landingPos, false);
+      // Skip opponent's homebase
+      if (landingPos == 0) {
+        landingPos = game->getNextPos(landingPos, false);
+      }
     }
     
     // Extra turn bonus
-    if (landingPos == 8) {
+    if (landingPos == 15) {
       score += 10;
     }
     
@@ -80,7 +84,7 @@ int AI::getHardMove(Game* game) {
   int bestMove = -1;
   int bestScore = -10000;
   
-  for (int i = 9; i <= 15; i++) {
+  for (int i = 8; i <= 14; i++) {
     if (!isValidMove(game, i)) continue;
     
     int score = evaluateMove(game, i);
@@ -102,16 +106,20 @@ int AI::evaluateMove(Game* game, int pit) {
   // Simulate where seeds will land
   for (int j = 0; j < seeds; j++) {
     landingPos = game->getNextPos(landingPos, false);
+    // Skip opponent's homebase
+    if (landingPos == 0) {
+      landingPos = game->getNextPos(landingPos, false);
+    }
   }
   
   // Extra turn is very valuable
-  if (landingPos == 8) {
+  if (landingPos == 15) {
     score += 20;
   }
   
   // Landing in empty pit (potential capture)
-  if (landingPos >= 9 && landingPos <= 15 && game->pits[landingPos] == 0) {
-    int oppositePit = 16 - landingPos;
+  if (landingPos >= 8 && landingPos <= 14 && game->pits[landingPos] == 0) {
+    int oppositePit = 15 - landingPos;
     if (game->pits[oppositePit] > 0) {
       score += game->pits[oppositePit] * 2; // Capture bonus
     }
@@ -119,7 +127,7 @@ int AI::evaluateMove(Game* game, int pit) {
   
   // Prefer moves that increase store difference
   int p1Store = game->pits[0];
-  int p2Store = game->pits[8];
+  int p2Store = game->pits[15];
   score += (p2Store - p1Store);
   
   // Prefer distributing seeds widely
@@ -136,7 +144,7 @@ int AI::countSeeds(Game* game, bool isP1) {
       total += game->pits[i];
     }
   } else {
-    for (int i = 9; i <= 15; i++) {
+    for (int i = 8; i <= 14; i++) {
       total += game->pits[i];
     }
   }

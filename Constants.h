@@ -10,7 +10,7 @@
 #define BTN_P2_RIGHT  15
 
 // Animation timing
-#define ANIM_DELAY 300
+#define ANIM_DELAY 500
 #define BUTTON_DELAY 50
 #define AI_MOVE_DELAY 1000
 #define AI_THINK_DELAY 500
