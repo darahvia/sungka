@@ -1,6 +1,7 @@
 #ifndef INPUT_H
 #define INPUT_H
 
+#include <Arduino.h>
 #include <PCF8575.h>
 #include "Constants.h"
 #include "Game.h"

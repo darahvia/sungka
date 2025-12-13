@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include "Display.h"
 
 Display::Display(TFT_eSPI* display) {
@@ -160,15 +161,11 @@ void Display::drawPvAIScreen() {
   tft->drawRoundRect(60, 60, 200, 100, 15, TFT_ORANGE);
   
   tft->setTextColor(TFT_WHITE);
-  tft->setTextSize(2);
-  tft->setCursor(70, 75);
-  tft->println("Select Difficulty");
+  tft->setTextSize(3);
+  tft->setCursor(80, 85);
+  tft->println("Player vs AI");
   
-  drawButton(80, 120, 80, 30, "EASY", false);
-  drawButton(170, 120, 80, 30, "MEDIUM", false);
-  drawButton(80, 160, 80, 30, "HARD", false);
-  
-  drawButton(100, 200, 120, 30, "BACK", false);
+  drawButton(100, 180, 120, 40, "BACK", false);
 }
 
 void Display::drawPvAIGameBoard(Game* game) {
@@ -218,6 +215,7 @@ void Display::drawPvAIGameBoard(Game* game) {
   tft->setCursor(180, 220);
   tft->print(p2Status);
 }
+
 void Display::drawLeaderboardScreen() {
   tft->fillScreen(TFT_DARKGREEN);
   
