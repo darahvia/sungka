@@ -43,7 +43,7 @@ void Input::handleMenuButton(int btn, int* menuSelection, Screen* currentScreen)
       *currentScreen = PVA;
     }
     else if (*menuSelection == 2) {
-      *currentScreen = LEADERBOARD;
+      *currentScreen = RULES;
     }
   }
 }

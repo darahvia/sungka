@@ -5,7 +5,6 @@ Display::Display(TFT_eSPI* display) {
   tft = display;
 }
 
-// ... [Previous drawButton code] ...
 void Display::drawButton(int x, int y, int w, int h, String text, bool selected) {
   tft->fillRoundRect(x + 3, y + 3, w, h, 8, TFT_DARKGREY);
   
@@ -33,7 +32,6 @@ void Display::drawButton(int x, int y, int w, int h, String text, bool selected)
   tft->println(text);
 }
 
-// ... [Previous drawMenu code] ...
 void Display::drawMenu(int selection) {
   tft->fillScreen(TFT_BLACK);
   
@@ -46,7 +44,7 @@ void Display::drawMenu(int selection) {
   
   drawButton(100, 80, 120, 35, "PvP", selection == 0);
   drawButton(100, 125, 120, 35, "PvAI", selection == 1);
-  drawButton(100, 170, 120, 35, "Leaderboard", selection == 2);
+  drawButton(100, 170, 120, 35, "Rules", selection == 2);
   
   tft->setTextColor(TFT_CYAN);
   tft->setTextSize(1);
@@ -275,7 +273,7 @@ void Display::drawPvAIScreen() {
   drawButton(100, 180, 120, 40, "BACK", false);
 }
 
-void Display::drawLeaderboardScreen() {
+void Display::drawRulesScreen() {
   tft->fillScreen(TFT_DARKGREEN);
   tft->fillRoundRect(60, 60, 200, 100, 15, TFT_GREEN);
   tft->drawRoundRect(60, 60, 200, 100, 15, TFT_YELLOW);
