@@ -22,7 +22,6 @@ public:
   int currentPlayer; // 0 = P1, 1 = P2
   bool gameOver;
   
-  // NEW: Store the last rule event text
   String lastRuleMsg; 
 
   Game();
@@ -37,7 +36,7 @@ public:
   
   // Helpers
   int getNextPos(int pos, bool isP1);
-  int getOppositePit(int pit); // NEW HELPER
+  int getOppositePit(int pit); 
   void endP1Turn();
   void endP2Turn();
   void checkRoundOneEnd();

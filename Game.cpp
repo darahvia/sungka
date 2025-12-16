@@ -35,13 +35,12 @@ void Game::init() {
   lastRuleMsg = "Game Start!";
 }
 
-// Helper for your specific board mapping:
 // 1-8, 2-9, 3-10, 4-11, 5-12, 6-13, 7-14
 int Game::getOppositePit(int pit) {
   if (pit >= 1 && pit <= 7) {
-    return pit + 7; // e.g., 1->8, 7->14
+    return pit + 7; // 1->8, 7->14
   } else if (pit >= 8 && pit <= 14) {
-    return pit - 7; // e.g., 8->1, 14->7
+    return pit - 7; // 8->1, 14->7
   }
   return -1;
 }
@@ -91,10 +90,10 @@ void Game::animateP1() {
     pits[p1CurrentPos]++;
     p1SeedsInHand--;
     
-    // Check if this was the last stone
+
     if (p1SeedsInHand == 0) {
       
-      // CASE 1: Landed in Own Store (Extra Turn)
+      //  Landed in Own Store (Extra Turn)
       if (p1CurrentPos == 0) {
         lastRuleMsg = "P1 HOME BASE: Extra Turn!";
         Serial.println("P1 Landed in Store - Extra Turn");
@@ -115,15 +114,15 @@ void Game::animateP1() {
         return;
       }
       
-      // CASE 2: Landed in a Pit (1-14)
+      //  Landed in a Pit (1-14)
       if (pits[p1CurrentPos] > 1) {
-        // Chain rule: Pick up everything and continue
+        // Pick up everything and continue
         p1SeedsInHand = pits[p1CurrentPos];
         pits[p1CurrentPos] = 0;
         return; 
       }
       
-      // CASE 3: Landed in Empty Pit (seeds == 1 after drop)
+      //  Landed in Empty Pit (seeds == 1 after drop)
       else if (pits[p1CurrentPos] == 1) {
         // If on OWN side -> Check Capture
         if (p1CurrentPos >= 1 && p1CurrentPos <= 7) {
@@ -131,7 +130,7 @@ void Game::animateP1() {
            int oppSeeds = pits[oppositePos];
            
            if (oppSeeds > 0) {
-             // CAPTURE RULE: Take own seed + opponent seeds
+             // make own seed + opponent seeds
              int captured = oppSeeds + 1; 
              
              // Update Data
@@ -139,7 +138,6 @@ void Game::animateP1() {
              pits[p1CurrentPos] = 0;
              pits[0] += captured; // Put in P1 Store
              
-             // Message: "P1 Captured [OpponentPit](Seeds)"
              lastRuleMsg = "P1 CAPTURE! Pit " + String(p1CurrentPos) + " took Pit " + String(oppositePos) + "(" + String(oppSeeds) + ")";
              Serial.print("P1 Captured "); Serial.println(captured);
            } else {
@@ -165,14 +163,14 @@ void Game::animateP2() {
   if (p2SeedsInHand > 0) {
     p2CurrentPos = getNextPos(p2CurrentPos, false);
     
-    // Drop one stone
+
     pits[p2CurrentPos]++;
     p2SeedsInHand--;
     
-    // Check if this was the last stone
+
     if (p2SeedsInHand == 0) {
       
-      // CASE 1: Landed in Own Store (Extra Turn)
+
       if (p2CurrentPos == 15) {
         lastRuleMsg = "P2 HOME BASE: Extra Turn!";
         Serial.println("P2 Landed in Store - Extra Turn");
@@ -193,27 +191,23 @@ void Game::animateP2() {
         return;
       }
       
-      // CASE 2: Landed in a Pit (1-14)
       if (pits[p2CurrentPos] > 1) {
         p2SeedsInHand = pits[p2CurrentPos];
         pits[p2CurrentPos] = 0;
         return; 
       }
       
-      // CASE 3: Landed in Empty Pit (seeds == 1)
       else if (pits[p2CurrentPos] == 1) {
-        // If on OWN side -> Check Capture
         if (p2CurrentPos >= 8 && p2CurrentPos <= 14) {
            int oppositePos = getOppositePit(p2CurrentPos);
            int oppSeeds = pits[oppositePos];
            
            if (oppSeeds > 0) {
-             // CAPTURE RULE
              int captured = oppSeeds + 1;
              
              pits[oppositePos] = 0;
              pits[p2CurrentPos] = 0;
-             pits[15] += captured; // Put in P2 Store
+             pits[15] += captured; 
              
              lastRuleMsg = "P2 CAPTURE! Pit " + String(p2CurrentPos) + " took Pit " + String(oppositePos) + "(" + String(oppSeeds) + ")";
              Serial.print("P2 Captured "); Serial.println(captured);
@@ -224,7 +218,6 @@ void Game::animateP2() {
            lastRuleMsg = "P2: End Turn (Opponent Side)";
         }
         
-        // Turn Ends
         if (firstMove) {
           p2State = WAITING;
           checkRoundOneEnd();

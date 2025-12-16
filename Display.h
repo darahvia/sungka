@@ -6,14 +6,16 @@
 #include "Constants.h"
 #include "Game.h"
 
+extern const uint16_t bg_image[];
+
 class Display {
 private:
   TFT_eSPI* tft;
   
-  // Updated helpers to accept Game pointer
   void drawButton(int x, int y, int w, int h, String text, bool selected);
   void drawPit(int x, int y, int radius, int seeds, bool selected, int pitIndex, Game* game);
   void drawStore(int x, int y, int radius, int seeds, String label, int storeIndex, Game* game);
+  void drawBackground();
 
 public:
   Display(TFT_eSPI* display);
@@ -21,7 +23,7 @@ public:
   void drawGameBoard(Game* game);
   void drawPvAIScreen();
   void drawPvAIGameBoard(Game* game);
-  void drawLeaderboardScreen();
+  void drawRulesScreen(int page);
 };
 
 #endif

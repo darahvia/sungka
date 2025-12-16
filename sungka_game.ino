@@ -24,11 +24,11 @@ AI ai;
 // Screen management
 Screen currentScreen = MENU;
 int menuSelection = 0;
-AI::Difficulty aiDifficulty = AI::EASY;
+int rulePage = 1;
 
 unsigned long lastAnimTime = 0;
 unsigned long lastAITime = 0;
-#define AI_MOVE_DELAY 1000
+
 
 void setup() {
   // Initialize display
@@ -89,11 +89,10 @@ void loop() {
   }
   
   // Handle PvAI game animation and AI moves
-  if (currentScreen == PVA) {
+if (currentScreen == PVA) {
     // Animation
     if (millis() - lastAnimTime > ANIM_DELAY) {
       bool needsRedraw = false;
-      
       if (game.p1State == ANIMATING) {
         game.animateP1();
         needsRedraw = true;
@@ -111,13 +110,28 @@ void loop() {
       lastAnimTime = millis();
     }
     
-    // AI makes move
-    if (game.p2State == SELECTING && game.p1State != ANIMATING) {
+
+// ai
+    if (game.p2State == SELECTING) {
+
       if (millis() - lastAITime > AI_MOVE_DELAY) {
-        int aiMove = ai.getMove(&game, aiDifficulty);
+        
+        // Get random valid move
+        int aiMove = ai.getMove(&game);
+        
         if (aiMove != -1) {
           game.p2Selected = aiMove;
-          game.startP2Move();
+          
+          if (game.firstMove) {
+            game.p2State = READY;
+            
+            if (game.p1State == READY) {
+               game.startFirstMove();
+            }
+          } else {
+            game.startP2Move();
+          }
+          
           display.drawPvAIGameBoard(&game);
         }
         lastAITime = millis();
@@ -127,7 +141,6 @@ void loop() {
   
   delay(BUTTON_DELAY);
 }
-
 void handleButton(int btn) {
   if (currentScreen == MENU) {
     input.handleMenuButton(btn, &menuSelection, &currentScreen);
@@ -141,8 +154,8 @@ void handleButton(int btn) {
       game.init();
       display.drawPvAIGameBoard(&game);
       lastAITime = millis();
-    } else if (currentScreen == LEADERBOARD) {
-      display.drawLeaderboardScreen();
+    } else if (currentScreen == RULES) {
+      display.drawRulesScreen(rulePage);
     }
   }
   else if (currentScreen == PVP) {
@@ -150,16 +163,36 @@ void handleButton(int btn) {
     display.drawGameBoard(&game);
   }
   else if (currentScreen == PVA) {
-    // Handle PvAI game buttons (only P1 buttons work)
     if (btn == BTN_P1_LEFT || btn == BTN_P1_RIGHT || btn == BTN_P1_SELECT) {
       input.handleGameButton(btn, &game);
       display.drawPvAIGameBoard(&game);
     }
-    // Back button
     else if (btn == BTN_P2_SELECT) {
       currentScreen = MENU;
       menuSelection = 0;
       display.drawMenu(menuSelection);
+    }
+  }
+else if (currentScreen == RULES) {
+    if (btn == BTN_P1_RIGHT || btn == BTN_P2_RIGHT || btn == BTN_P1_SELECT || btn == BTN_P2_SELECT) {
+      if (rulePage < 3) {
+        rulePage++;
+        display.drawRulesScreen(rulePage);
+      } else {
+        currentScreen = MENU;
+        menuSelection = 0;
+        display.drawMenu(menuSelection);
+      }
+    }
+    else if (btn == BTN_P1_LEFT || btn == BTN_P2_LEFT) {
+      if (rulePage > 1) {
+        rulePage--;
+        display.drawRulesScreen(rulePage);
+      } else {
+        currentScreen = MENU;
+        menuSelection = 0;
+        display.drawMenu(menuSelection);
+      }
     }
   }
   else {

@@ -2,15 +2,15 @@
 #define CONSTANTS_H
 
 // Button pins on PCF8575
-#define BTN_P1_LEFT   12
-#define BTN_P1_SELECT 13
+#define BTN_P1_LEFT   12  // 10
+#define BTN_P1_SELECT 13  // 11
 #define BTN_P1_RIGHT  3
-#define BTN_P2_LEFT   14
-#define BTN_P2_SELECT 7
-#define BTN_P2_RIGHT  15
+#define BTN_P2_LEFT   15  // 13
+#define BTN_P2_SELECT 7  // 7
+#define BTN_P2_RIGHT  14  // 12
 
 // Animation timing
-#define ANIM_DELAY 500
+#define ANIM_DELAY 250
 #define BUTTON_DELAY 50
 #define AI_MOVE_DELAY 1000
 #define AI_THINK_DELAY 500
@@ -20,7 +20,7 @@ enum Screen {
   MENU,
   PVP,
   PVA,
-  LEADERBOARD
+  RULES
 };
 
 // Player states
