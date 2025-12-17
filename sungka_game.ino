@@ -83,7 +83,30 @@ void loop() {
       if (needsRedraw) {
         display.drawGameBoard(&game);
       }
-      
+
+      if (game.gameOver) {
+        String msg = "DRAW!";
+        int w = game.getWinner();
+        if (w == 1) msg = "P1 WINS!";
+        else if (w == 2) msg = "P2 WINS!";
+        
+
+        tft.fillRect(60, 100, 200, 50, TFT_BLACK);
+        tft.drawRect(60, 100, 200, 50, TFT_WHITE);
+        
+        tft.setTextSize(3);
+        tft.setTextColor(TFT_MAGENTA);
+        int textX = 160 - (wMsg.length() * 9); 
+        tft.setCursor(textX, 115);
+        tft.print(msg);
+        
+        delay(5000);
+        
+        game.gameOver = false; 
+        currentScreen = MENU;
+        menuSelection = 0;
+        display.drawMenu(menuSelection);
+      }
       lastAnimTime = millis();
     }
   }
@@ -106,7 +129,32 @@ if (currentScreen == PVA) {
       if (needsRedraw) {
         display.drawPvAIGameBoard(&game);
       }
-      
+
+      if (game.gameOver) {
+        String wMsg = "DRAW!";
+        int w = game.getWinner();
+        if (w == 1) msg = "YOU WIN!";
+        else if (w == 2) msg = "AI WINS!";
+        
+        game.lastRuleMsg = msg; 
+        display.drawPvAIGameBoard(&game); 
+        
+        tft.fillRect(60, 100, 200, 50, TFT_BLACK);
+        tft.drawRect(60, 100, 200, 50, TFT_WHITE);
+        tft.setTextSize(3);
+        tft.setTextColor(TFT_MAGENTA);
+        int textX = 160 - (msg.length() * 9);
+        tft.setCursor(textX, 115);
+        tft.print(msg);
+
+        delay(5000);
+        
+        game.gameOver = false;
+        currentScreen = MENU;
+        menuSelection = 0;
+        display.drawMenu(menuSelection);
+      }
+
       lastAnimTime = millis();
     }
     
