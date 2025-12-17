@@ -5,18 +5,21 @@ Game::Game() {
 }
 
 void Game::init() {
-  // Player 1: houses [1-7], STORE [0] (Left)
-  pits[0] = 0;
+  // Player 1: houses [1-7], STORE [15] (right)
+  // Player 2: houses [8-14], STORE [0] (left)
+
+  pits[0] = 0; // p2
+  pits[15] = 0; // p1
+
+  //p1
   for (int i = 1; i <= 7; i++) {
     pits[i] = 7;
   }
   
-  // Player 2: houses [8-14], STORE [15] (Right)
+  //p2
   for (int i = 8; i <= 14; i++) {
     pits[i] = 7;
-  }
-  pits[15] = 0;
-  
+  }  
   firstMove = true;
   p1State = SELECTING;
   p2State = SELECTING;
@@ -93,8 +96,8 @@ void Game::animateP1() {
 
     if (p1SeedsInHand == 0) {
       
-      //  Landed in Own Store (Extra Turn)
-      if (p1CurrentPos == 0) {
+      //  Landed in Own (Extra Turn)
+      if (p1CurrentPos == 15) {
         lastRuleMsg = "P1 HOME BASE: Extra Turn!";
         Serial.println("P1 Landed in Store - Extra Turn");
         
@@ -144,7 +147,7 @@ void Game::animateP1() {
              lastRuleMsg = "P1: Landed on empty pit " + String(p1CurrentPos);
            }
         } else {
-           lastRuleMsg = "P1: End Turn (Opponent Side)";
+           lastRuleMsg = "P1: End Turn (Landed Opp Side)";
         }
         
         // Turn Ends
@@ -171,7 +174,7 @@ void Game::animateP2() {
     if (p2SeedsInHand == 0) {
       
 
-      if (p2CurrentPos == 15) {
+      if (p2CurrentPos == 0) {
         lastRuleMsg = "P2 HOME BASE: Extra Turn!";
         Serial.println("P2 Landed in Store - Extra Turn");
         
@@ -215,7 +218,7 @@ void Game::animateP2() {
              lastRuleMsg = "P2: Landed on empty pit " + String(p2CurrentPos);
            }
         } else {
-           lastRuleMsg = "P2: End Turn (Opponent Side)";
+           lastRuleMsg = "P2: End Turn (Landed Opp Side)";
         }
         
         if (firstMove) {
@@ -299,8 +302,10 @@ int Game::getNextPos(int pos, bool isP1) {
   else if (pos == 8) next = 0;
   else if (pos == 0) next = 1;
   
-  if (isP1 && next == 15) return 14;
-  if (!isP1 && next == 0) return 1;
+  // p1 skips own
+  if (isP1 && next == 0) return 1;
+  // p2 skips own
+  if (!isP1 && next == 15) return 14;
   
   return next;
 }
@@ -321,20 +326,22 @@ bool Game::checkGameEnd() {
 }
 
 void Game::collectRemainingSeeds() {
+  // p1 to own
   for (int i = 1; i <= 7; i++) {
-    pits[0] += pits[i];
+    pits[15] += pits[i];
     pits[i] = 0;
   }
   
+  // p2 to own
   for (int i = 8; i <= 14; i++) {
-    pits[15] += pits[i];
+    pits[0] += pits[i];
     pits[i] = 0;
   }
   lastRuleMsg = "GAME OVER!";
 }
 
 int Game::getWinner() {
-  if (pits[0] > pits[15]) return 1;
-  if (pits[15] > pits[0]) return 2;
+  if (pits[15] > pits[0]) return 1;
+  if (pits[0] > pits[15]) return 2;
   return 0;
 }

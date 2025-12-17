@@ -202,3 +202,123 @@ else if (currentScreen == RULES) {
     }
   }
 }
+
+// #include <Wire.h>
+// #include <PCF8575.h>
+
+// // Initialize PCF8575 with default address 0x20
+// PCF8575 expander(0x20);
+
+// // --- PIN DEFINITIONS ---
+
+// // MOVED: P1 Right is now on ESP32 directly
+// // We use GPIO 4 because GPIO 3 is reserved for Serial RX (USB)
+// const int BTN_P1_RIGHT_ESP = 4; 
+
+// // PCF8575 PIN MAPPING (0-15)
+// // Note: Pin 3 is now unused on the expander
+// #define BTN_P1_LEFT    12 
+// #define BTN_P1_SELECT  13 
+// // #define BTN_P1_RIGHT   3  <-- REMOVED from PCF
+// #define BTN_P2_LEFT    15 
+// #define BTN_P2_SELECT  7 
+// #define BTN_P2_RIGHT   14 
+
+// // Other mapped pins
+// #define one     1
+// #define two     2
+// // pin 3 skipped
+// #define four    4
+// #define five    5
+// #define six     6
+// #define seven   7 // Duplicate of P2_SELECT in your list, effectively same pin
+// #define eight   8
+// #define nine    9
+// #define eleven  11
+// #define sixteen 16 // PCF8575 only has 0-15. This is likely an error in your original list. 
+//                    // If you meant Pin 0, change to 0. 
+
+// // State Tracking
+// bool lastStatePCF[16] = {0}; 
+// bool lastStateESP = LOW;
+
+// void setup() {
+//   Serial.begin(115200);
+//   Wire.begin();
+  
+//   // --- 1. SETUP ESP32 PIN ---
+//   // Using INPUT_PULLDOWN adds an internal backup resistor 
+//   // just in case your external resistor is loose.
+//   pinMode(BTN_P1_RIGHT_ESP, INPUT_PULLDOWN);
+
+//   // --- 2. SETUP PCF8575 ---
+//   if (!expander.begin()) {
+//     Serial.println("PCF8575 not found!");
+//     while (1);
+//   }
+  
+//   // CRITICAL FIX: To use PCF8575 pins as INPUTS, you must write HIGH.
+//   // This turns on the weak internal pull-up. 
+//   // Your external pull-down resistor (1k-3k) will overpower this 
+//   // and pull the pin LOW until the button is pressed.
+//   for (int i = 0; i < 16; i++) {
+//     expander.write(i, HIGH);
+//   }
+  
+//   Serial.println("Sungka Button Test Ready!");
+//   Serial.println("System: External Pull-Downs (Active HIGH)");
+// }
+
+// void loop() {
+//   // --- A. READ ESP32 DIRECT BUTTON ---
+//   bool currentEspState = digitalRead(BTN_P1_RIGHT_ESP);
+  
+//   if (currentEspState == HIGH && lastStateESP == LOW) {
+//     Serial.println("Button pressed: P1 RIGHT (ESP32 Pin 4)");
+//   }
+//   lastStateESP = currentEspState;
+
+//   // --- B. READ PCF8575 BUTTONS ---
+//   for (int i = 0; i < 16; i++) {
+//     // Skip Pin 3 (physically moved) and Pin 16 (doesn't exist on PCF8575)
+//     if (i == 3) continue; 
+    
+//     // Read the pin
+//     // If you used strong pull-down resistors, LOW = Unpressed, HIGH = Pressed
+//     bool currentState = expander.read(i);
+    
+//     if (currentState == HIGH && lastStatePCF[i] == LOW) {
+//       printExpanderButton(i);
+//     }
+    
+//     lastStatePCF[i] = currentState;
+//   }
+  
+//   delay(50); // Short debounce
+// }
+
+// void printExpanderButton(int btn) {
+//   Serial.print("Button pressed: ");
+
+//   switch (btn) {
+//     case BTN_P1_LEFT:    Serial.println("P1 LEFT"); break;
+//     case BTN_P1_SELECT:  Serial.println("P1 SELECT"); break;
+//     // case 3: handled by ESP32 logic above
+//     case BTN_P2_LEFT:    Serial.println("P2 LEFT"); break;
+//     case BTN_P2_SELECT:  Serial.println("P2 SELECT"); break;
+//     case BTN_P2_RIGHT:   Serial.println("P2 RIGHT"); break;
+
+//     case one:            Serial.println("ONE"); break;
+//     case two:            Serial.println("TWO"); break;
+//     case four:           Serial.println("FOUR"); break;
+//     case five:           Serial.println("FIVE"); break;
+//     case six:            Serial.println("SIX"); break;
+//     case eight:          Serial.println("EIGHT"); break;
+//     case nine:           Serial.println("NINE"); break;
+//     case eleven:         Serial.println("ELEVEN"); break;
+    
+//     default:
+//       Serial.print("PIN ");
+//       Serial.println(btn);
+//   }
+// }

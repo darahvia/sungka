@@ -69,7 +69,8 @@ void Display::drawGameBoard(Game* game) {
     drawPit(x, y, 12, game->pits[pitIndex], isSelected, pitIndex, game);
   }
 
-  drawStore(30, 120, 20, game->pits[0], "P1", 0, game);
+  // P1
+  drawStore(290, 120, 20, game->pits[15], "P1", 15, game);
 
   tft->setTextSize(2);
   tft->setTextColor(TFT_YELLOW);
@@ -93,7 +94,8 @@ void Display::drawGameBoard(Game* game) {
     drawPit(x, y, 12, game->pits[pitIndex], isSelected, pitIndex, game);
   }
 
-  drawStore(30, 120, 20, game->pits[15], "P2", 15, game);
+  //P2
+  drawStore(290, 120, 20, game->pits[0], "P2",0, game);
 
 
   tft->setTextSize(2);
@@ -108,6 +110,13 @@ void Display::drawGameBoard(Game* game) {
 
  
   tft->setRotation(0);
+
+  tft->setTextColor(TFT_YELLOW);
+  tft->setTextSize(1);
+  int msgLen = game->lastRuleMsg.length() * 6;
+  int msgX = max(0, (320 - msgLen) / 2);
+  tft->setCursor(msgX, 117); 
+  tft->print(game->lastRuleMsg);
 }
 
 void Display::drawPvAIGameBoard(Game* game) {
@@ -116,7 +125,7 @@ void Display::drawPvAIGameBoard(Game* game) {
   
 
 
-  for (int i = 0; i < 7; i++) {
+  for (int i = 0; i < 7; i++) {// AI Pits
     int pitIndex = 8 + i;
     int x = 80 + (i * 30);
     int y = 70; 
@@ -125,6 +134,7 @@ void Display::drawPvAIGameBoard(Game* game) {
   }
   
 
+// PLAYER Pits
   for (int i = 0; i < 7; i++) {
     int pitIndex = i + 1;
     int x = 80 + (i * 30);
@@ -134,8 +144,8 @@ void Display::drawPvAIGameBoard(Game* game) {
   }
   
 
-  drawStore(30, 120, 20, game->pits[0], "YOU", 0, game);
-  drawStore(290, 120, 20, game->pits[15], "AI", 15, game);
+  drawStore(290, 120, 20, game->pits[0], "YOU", 15, game);
+  drawStore(30, 120, 20, game->pits[15], "AI", 0, game);
   
 
   tft->setTextSize(1);
@@ -152,7 +162,7 @@ void Display::drawPvAIGameBoard(Game* game) {
   tft->setTextColor(TFT_YELLOW);
   int msgLen = game->lastRuleMsg.length() * 6;
   int msgX = max(0, (320 - msgLen) / 2);
-  tft->setCursor(msgX, 195); 
+  tft->setCursor(msgX, 117); 
   tft->print(game->lastRuleMsg);
 }
 
@@ -163,18 +173,18 @@ void Display::drawPit(int x, int y, int radius, int seeds, bool selected, int pi
     tft->drawCircle(x, y, radius + 5, TFT_GREEN);
   }
   
-  //  Active Hand Indicator
+  //  Active Indicator
   bool isP1Active = (game->p1State == ANIMATING && game->p1CurrentPos == pitIndex);
   bool isP2Active = (game->p2State == ANIMATING && game->p2CurrentPos == pitIndex);
 
   if (isP1Active || isP2Active) {
-    uint16_t color = isP1Active ? TFT_YELLOW : TFT_RED;
+    uint16_t color = isP1Active ? TFT_YELLOW : TFT_CYAN;
     int handCount = isP1Active ? game->p1SeedsInHand : game->p2SeedsInHand;
     
     tft->drawCircle(x, y, radius + 2, color);
     tft->drawCircle(x, y, radius + 3, color);
     
-    // Draw Hand Count Floating
+    // Draw Count
     tft->setTextColor(color, TFT_BLACK);
     tft->setTextSize(1);
     tft->setCursor(x - 3, y - radius - 12); 
@@ -200,12 +210,12 @@ void Display::drawPit(int x, int y, int radius, int seeds, bool selected, int pi
 }
 
 void Display::drawStore(int x, int y, int radius, int seeds, String label, int storeIndex, Game* game) {
-  // Active Hand Indicator
+  // active ndicator
   bool isP1Active = (game->p1State == ANIMATING && game->p1CurrentPos == storeIndex);
   bool isP2Active = (game->p2State == ANIMATING && game->p2CurrentPos == storeIndex);
 
   if (isP1Active || isP2Active) {
-    uint16_t color = isP1Active ? TFT_YELLOW : TFT_RED;
+    uint16_t color = isP1Active ? TFT_YELLOW : TFT_CYAN;
     int handCount = isP1Active ? game->p1SeedsInHand : game->p2SeedsInHand;
     
     tft->drawCircle(x, y, radius + 2, color);
@@ -218,8 +228,8 @@ void Display::drawStore(int x, int y, int radius, int seeds, String label, int s
   }
   
   // Store Body
-  tft->fillCircle(x, y, radius, TFT_CYAN);
-  tft->drawCircle(x, y, radius, TFT_BLUE);
+  tft->fillCircle(x, y, radius, TFT_WHITE);
+  tft->drawCircle(x, y, radius, TFT_WHITE);
   
   // Seeds
   tft->setTextSize(1);
