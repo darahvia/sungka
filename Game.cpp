@@ -104,7 +104,7 @@ void Game::animateP1() {
         if (checkGameEnd()) return;
 
         if (firstMove) {
-          p1State = WAITING; 
+          p1State = SELECTING; 
           checkRoundOneEnd();
         } else {
           if (hasValidMoves(0)) {
@@ -139,7 +139,7 @@ void Game::animateP1() {
              // Update Data
              pits[oppositePos] = 0;
              pits[p1CurrentPos] = 0;
-             pits[0] += captured; // Put in P1 Store
+             pits[15] += captured; // Put in P1 Store
              
              lastRuleMsg = "P1 CAPTURE! Pit " + String(p1CurrentPos) + " took Pit " + String(oppositePos) + "(" + String(oppSeeds) + ")";
              Serial.print("P1 Captured "); Serial.println(captured);
@@ -181,7 +181,7 @@ void Game::animateP2() {
         if (checkGameEnd()) return;
 
         if (firstMove) {
-          p2State = WAITING;
+          p2State = SELECTING;
           checkRoundOneEnd();
         } else {
           if (hasValidMoves(1)) {
@@ -210,7 +210,7 @@ void Game::animateP2() {
              
              pits[oppositePos] = 0;
              pits[p2CurrentPos] = 0;
-             pits[15] += captured; 
+             pits[0] += captured; 
              
              lastRuleMsg = "P2 CAPTURE! Pit " + String(p2CurrentPos) + " took Pit " + String(oppositePos) + "(" + String(oppSeeds) + ")";
              Serial.print("P2 Captured "); Serial.println(captured);
