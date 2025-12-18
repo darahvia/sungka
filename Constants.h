@@ -4,7 +4,7 @@
 // Button pins on PCF8575
 #define BTN_P1_LEFT   12  // 14
 #define BTN_P1_SELECT 13  // 15
-#define BTN_P1_RIGHT  3
+#define BTN_P1_RIGHT  27
 #define BTN_P2_LEFT   15  // 17
 #define BTN_P2_SELECT 7  // 7
 #define BTN_P2_RIGHT  14  // 16

@@ -3,7 +3,7 @@
 
 Input::Input(PCF8575* exp) {
   expander = exp;
-  for (int i = 0; i < 16; i++) {
+  for (int i = 0; i < 30; i++) {
     lastState[i] = false;
   }
 }
@@ -15,8 +15,14 @@ void Input::begin() {
 }
 
 bool Input::checkButton(int btn) {
-  bool currentState = expander->read(btn);
-  
+  bool currentState;
+  // Check if this is the ESP32 pin
+  if (btn == BTN_P1_RIGHT) {
+    currentState = digitalRead(btn);
+  } else {
+    // Otherwise read from expander
+    currentState = expander->read(btn);
+  }
   if (currentState == HIGH && lastState[btn] == LOW) {
     lastState[btn] = currentState;
     return true;

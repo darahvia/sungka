@@ -9,7 +9,7 @@
 class Input {
 private:
   PCF8575* expander;
-  bool lastState[16];
+  bool lastState[30];
   
   void handleP1Button(int btn, Game* game);
   void handleP2Button(int btn, Game* game);
