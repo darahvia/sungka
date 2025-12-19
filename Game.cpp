@@ -104,7 +104,7 @@ void Game::animateP1() {
         if (checkGameEnd()) return;
 
         if (firstMove) {
-          p1State = SELECTING; 
+          p1State = WAITING; 
           checkRoundOneEnd();
         } else {
           if (hasValidMoves(0)) {
@@ -181,7 +181,7 @@ void Game::animateP2() {
         if (checkGameEnd()) return;
 
         if (firstMove) {
-          p2State = SELECTING;
+          p2State = WAITING;
           checkRoundOneEnd();
         } else {
           if (hasValidMoves(1)) {
